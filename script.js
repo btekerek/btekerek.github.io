@@ -1,861 +1,498 @@
-const elements = [
-    {
-        time: 2,
-        type: 'water',
-        shape: [[1, 1, 1],
-        [0, 0, 0],
-        [0, 0, 0]],
-        rotation: 0,
-        mirrored: false
-    },
-    {
-        time: 2,
-        type: 'town',
-        shape: [[1, 1, 1],
-        [0, 0, 0],
-        [0, 0, 0]],
-        rotation: 0,
-        mirrored: false
-    },
-    {
-        time: 1,
-        type: 'forest',
-        shape: [[1, 1, 0],
-        [0, 1, 1],
-        [0, 0, 0]],
-        rotation: 0,
-        mirrored: false
-    },
-    {
-        time: 2,
-        type: 'farm',
-        shape: [[1, 1, 1],
-        [0, 0, 1],
-        [0, 0, 0]],
-        rotation: 0,
-        mirrored: false
-    },
-    {
-        time: 2,
-        type: 'forest',
-        shape: [[1, 1, 1],
-        [0, 0, 1],
-        [0, 0, 0]],
-        rotation: 0,
-        mirrored: false
-    },
-    {
-        time: 2,
-        type: 'town',
-        shape: [[1, 1, 1],
-        [0, 1, 0],
-        [0, 0, 0]],
-        rotation: 0,
-        mirrored: false
-    },
-    {
-        time: 2,
-        type: 'farm',
-        shape: [[1, 1, 1],
-        [0, 1, 0],
-        [0, 0, 0]],
-        rotation: 0,
-        mirrored: false
-    },
-    {
-        time: 1,
-        type: 'town',
-        shape: [[1, 1, 0],
-        [1, 0, 0],
-        [0, 0, 0]],
-        rotation: 0,
-        mirrored: false
-    },
-    {
-        time: 1,
-        type: 'town',
-        shape: [[1, 1, 1],
-        [1, 1, 0],
-        [0, 0, 0]],
-        rotation: 0,
-        mirrored: false
-    },
-    {
-        time: 1,
-        type: 'farm',
-        shape: [[1, 1, 0],
-        [0, 1, 1],
-        [0, 0, 0]],
-        rotation: 0,
-        mirrored: false
-    },
-    {
-        time: 1,
-        type: 'farm',
-        shape: [[0, 1, 0],
-        [1, 1, 1],
-        [0, 1, 0]],
-        rotation: 0,
-        mirrored: false
-    },
-    {
-        time: 2,
-        type: 'water',
-        shape: [[1, 1, 1],
-        [1, 0, 0],
-        [1, 0, 0]],
-        rotation: 0,
-        mirrored: false
-    },
-    {
-        time: 2,
-        type: 'water',
-        shape: [[1, 0, 0],
-        [1, 1, 1],
-        [1, 0, 0]],
-        rotation: 0,
-        mirrored: false
-    },
-    {
-        time: 2,
-        type: 'forest',
-        shape: [[1, 1, 0],
-        [0, 1, 1],
-        [0, 0, 1]],
-        rotation: 0,
-        mirrored: false
-    },
-    {
-        time: 2,
-        type: 'forest',
-        shape: [[1, 1, 0],
-        [0, 1, 1],
-        [0, 0, 0]],
-        rotation: 0,
-        mirrored: false
-    },
-    {
-        time: 2,
-        type: 'water',
-        shape: [[1, 1, 0],
-        [1, 1, 0],
-        [0, 0, 0]],
-        rotation: 0,
-        mirrored: false
-    },
-]
-const missions =
-{
-    "basic": [
-        {
-            "title": "Edge of the forest",
-            "description": "You get one point for each forest field adjacent to the edge of your map."
-        },
-        {
-            "title": "Sleepy valley",
-            "description": "For every row with three forest fields, you get four points."
-        },
-        {
-            "title": "Watering potatoes",
-            "description": "You get two points for each water field adjacent to your farm fields."
-        },
-        {
-            "title": "Borderlands",
-            "description": "For each full row or column, you get six points."
-        }
-    ],
-    "extra": [
-        {
-            "title": "Tree line",
-            "description": "You get two points for each of the fields in the longest vertically uninterrupted continuous forest. If there are two or more tree lines with the same longest length, only one counts."
-        },
-        {
-            "title": "Watering canal",
-            "description": "For each column of your map that has the same number of farm and water fields, you will receive four points. You must have at least one field of both terrain types in your column to score points."
-        },
-        {
-            "title": "Wealthy town",
-            "description": "You get three points for each of your village fields adjacent to at least three different terrain types."
-        },
-        {
-            "title": "Magicians' valley",
-            "description": "You get three points for your water fields adjacent to your mountain fields."
-        },
-        {
-            "title": "Empty site",
-            "description": "You get two points for empty fields adjacent to your village fields."
-        },
-        {
-            "title": "Terraced house",
-            "description": "For each field in the longest village fields that are horizontally uninterrupted and contiguous you will get two points."
-        },
-        {
-            "title": "Odd numbered silos",
-            "description": "For each of your odd numbered full columns you get 10 points."
-        },
-        {
-            "title": "Rich countryside",
-            "description": "For each row with at least five different terrain types, you will receive four points."
-        }
-    ],
-}
+const table = document.getElementById("table");
+const cells = document.querySelectorAll("td");
+const container = document.getElementById("container");
+const prompt = document.querySelector("#prompt h1");
+const blackCorner = document.getElementById("black-corner")
+const yellowCorner = document.getElementById("yellow-corner")
+const blackBench = document.getElementById("black-bench");
+const yellowBench = document.getElementById("yellow-bench");
+const blackScore = document.getElementById("black-score");
+const yellowScore = document.getElementById("yellow-score");
+const blackName = document.getElementById("black-name");
+const yellowName = document.getElementById("yellow-name");
+const gameBoard = document.getElementById("game-board");
+const player1 = document.getElementById("player1");
+const player2 = document.getElementById("player2");
+const pointsToWin = document.getElementById("points-to-win");
+const boardDimensions = document.getElementById("board-dimensions");
+const numberOfKittens = document.getElementById("number-of-kittens");
+const form = document.getElementById("form-container");
+const startScreen = document.getElementById("start-screen");
+const startGameButton = document.getElementById("start-game-btn");
+const restartGameButton = document.getElementById("restart-game-btn");
+let blackKittens = [];
+let yellowKittens = [];
+let currPlayer = "black";
+let opponent = "yellow";
+let score = {
+    black: 0,
+    yellow: 0
+};
+let gameOver = false;
+let winningScore = 5;
+let kittensPerPlayer;
+let boardSize;
 
-
-const mapContainer = document.getElementById('map');
-const nextElementContainer = document.getElementById('next-element');
-const timeUnit = document.getElementById('time-unit');
-const totalPoints = document.getElementById('total-points');
-const remainingUnitsTotal = document.getElementById('remaining-units-total');
-const remainingUnitsPerSeason = document.getElementById('remaining-units-per-season');
-const mainHeader = document.getElementById('main-header');
-const missionInfoContainer = document.getElementById('mission-info');
-const currentSeason = document.getElementById('current-season');
-const rotateButton = document.getElementById('rotate-btn');
-const flipButton = document.getElementById('flip-btn');
-
-
-const gridSize = 11;
-const map = Array.from({ length: gridSize }, () => Array(gridSize).fill(''));
-let selectedElement = elements[Math.floor(Math.random() * elements.length)];
-let seasons = [
-    {
-        name: 'Spring',
-        points: 0,
-    },
-    {
-        name: 'Summer',
-        points: 0
-    },
-    {
-        name: 'Autumn',
-        points: 0
-    },
-    {
-        name: 'Fall',
-        points: 0
-    },
-];
-currentSeason.innerHTML += seasons[0].name;
-
-let totalUnits = 15;
-let unitsPerSeason = 7;
-let missionsA = [];
-let missionsB = [];
-let missionsC = [];
-let missionsD = [];
-let canPlace = true;
-
-let borderlandsScore = 0;
-
-function renderMap() {
-    for (let row = 0; row < gridSize; row++) {
-        for (let col = 0; col < gridSize; col++) {
-            const cell = createCellElement(row, col);
-            mapContainer.appendChild(cell);
+function createGame(p1, p2, points, size, kittens) {
+    startScreen.style.display = "none";
+    restartGameButton.style.display = "none";
+    container.style.display = "flex";
+    blackName.innerText = p1;
+    yellowName.innerText = p2;
+    winningScore = points;
+    kittensPerPlayer = kittens;
+    boardSize = size;
+    table.style.width = `50%`;
+    table.style.height = `100%`;
+    table.style.display = "grid";
+    table.style.gridTemplateColumns = `repeat(${size}, 1fr)`;
+    table.style.gridTemplateRows = `repeat(${size}, 1fr)`;
+    table.style.boxSizing = "border-box";
+    let kittenSize = Math.sqrt(80000 / kittens);
+    for (let i = 0; i < size; i++) {
+        for (let j = 0; j < size; j++) {
+            const cell = document.createElement("td");
+            cell.id = `${i}${j}`;
+            cell.classList.add("empty-cell");
+            cell.style.width = `${table.style.width / size}px`;
+            cell.style.height = `${table.style.height / size}px`;
+            cell.setAttribute("ondragover", "event.preventDefault();");
+            cell.setAttribute("ondrop", "drop(event)");
+            cell.setAttribute("ondragenter", "dragEnter(event)");
+            cell.setAttribute("onmouseover", "handleMouseOver(event)");
+            cell.setAttribute("onmouseout", "handleMouseOver(event)");
+            table.appendChild(cell);
         }
     }
+    for (let i = 0; i < kittens; i++) {
+        const black = document.createElement("div");
+        black.classList.add("black");
+        black.style.width =  `${kittenSize}px` ;
+        black.style.height =   `${kittenSize}px`;
+        black.setAttribute("draggable", "true");
+        blackBench.appendChild(black);
+        blackKittens.push(black);
+        const yellow = document.createElement("div");
+        yellow.classList.add("yellow");
+        yellow.style.width = `${kittenSize}px`;
+        yellow.style.height = `${kittenSize}px`;
+        yellowBench.appendChild(yellow);
+        yellowKittens.push(yellow);
+        yellow.setAttribute("draggable", "true");
+    }
 
-    const mountainCells = [
-        [2, 2],
-        [4, 9],
-        [6, 4],
-        [9, 10],
-        [10, 6]
-    ];
-    initializeMissions();
-    mountainCells.forEach(([row, col]) => {
-        const cell = document.querySelector(`.cell[data-row="${row}"][data-col="${col}"]`);
-        cell.classList.remove('base');
-        cell.classList.add('cell');
-        cell.classList.add('mountain');
-        map[row][col] = 'mountain';
+}
+function delegate(parent, type, selector, handler) {
+    if (gameOver) { return; }
+    parent.addEventListener(type, function (event) {
+        const targetElement = event.target.closest(selector);
+        if (this.contains(targetElement)) {
+            handler.call(targetElement, event);
+        }
     });
 }
 
-function displayMissionInfo(missions, missionType, points) {
-    missions.forEach((mission, index) => {
-        const missionCard = document.createElement('div');
-        missionCard.classList.add('mission-card');
-        missionCard.innerHTML = `<strong>${missionType}: ${mission.title} || Points: ${points}</strong><br>${mission.description}`;
-        missionInfoContainer.appendChild(missionCard);
-    });
-}
-
-function initializeMissions() {
-    const allMissions = shuffle([...missions.basic, ...missions.extra]);
-
-    missionsA = [allMissions.pop()];
-    missionsB = [allMissions.pop()];
-    missionsC = [allMissions.pop()];
-    missionsD = [allMissions.pop()];
-
-    displayMissionInfo(missionsA, 'A', 0);
-    displayMissionInfo(missionsB, 'B', 0);
-    displayMissionInfo(missionsC, 'C', 0);
-    displayMissionInfo(missionsD, 'D', 0);
-}
-
-function placeElementOnMap(event) {
-    const cell = event.target;
-    const row = parseInt(cell.dataset.row);
-    const col = parseInt(cell.dataset.col);
-    const elementShape = selectedElement.shape;
-
-    if (!canPlace || totalUnits <= 0) return;
-
-    for (let i = 0; i < elementShape.length; i++) {
-        for (let j = 0; j < elementShape[i].length; j++) {
-            const currentRow = row + i;
-            const currentCol = col + j;
-            console.log(currentRow,currentCol);
-            if (
-                currentRow < 0 || currentRow > gridSize ||
-                currentCol < 0 || currentCol > gridSize &&
-                elementShape[i][j] === 1 &&
-                map[currentRow][currentCol] !== ''
-            ) {
-                canPlace = false;
-                break;
-            }
-        }
-        if (!canPlace) break;
-    }
-
-
-    if (canPlace) {
-
-        for (let i = 0; i < elementShape.length; i++) {
-            for (let j = 0; j < elementShape[i].length; j++) {
-                const currentRow = row + i;
-                const currentCol = col + j;
-                if (
-                    currentRow >= 0 && currentRow < gridSize &&
-                    currentCol >= 0 && currentCol < gridSize &&
-                    elementShape[i][j] === 1
-                ) {
-                    const mapCell = document.querySelector(
-                        `.cell[data-row="${currentRow}"][data-col="${currentCol}"]`
-                    );
-
-                    mapCell.classList.remove('base');
-                    mapCell.classList.add(selectedElement.type);
-                    map[currentRow][currentCol] = `${selectedElement.type}`;
-                }
-            }
-        }
+function getNewPosition(id, row, col) {
+    const adjRow = parseInt(id[0]);
+    const adjCol = parseInt(id[1]);
+    let newRow, newCol;
+    if (adjRow < row) {
+        newRow = adjRow - 1;
+    } else if (adjRow > row) {
+        newRow = adjRow + 1;
     } else {
-        if (totalUnits <= selectedElement.time) {
-            if (totalUnits === 1 && selectedElement.time === 2) {
-                for (let i = 0; i < elementShape.length; i++) {
-                    for (let j = 0; j < elementShape[i].length; j++) {
-                        const currentRow = row + i - 1;
-                        const currentCol = col + j - 1;
-                        if (
-                            currentRow >= 0 && currentRow < gridSize &&
-                            currentCol >= 0 && currentCol < gridSize &&
-                            elementShape[i][j] === 1
-                        ) {
-                            const mapCell = document.querySelector(
-                                `.cell[data-row="${currentRow}"][data-col="${currentCol}"]`
-                            );
+        newRow = adjRow;
+    }
+    if (adjCol < col) {
+        newCol = adjCol - 1;
+    } else if (adjCol > col) {
+        newCol = adjCol + 1;
+    } else {
+        newCol = adjCol;
+    }
+    return `${newRow}${newCol}`;
+}
 
-                            mapCell.classList.remove('base');
-                            mapCell.classList.add(selectedElement.type);
-                            map[currentRow][currentCol] = `${selectedElement.type}`;
-                        }
-                    }
+function getKittensToRemove(row, col) {
+    let adjacentCellColors = [];
+    let adjacentCells = [];
+    let merged = [];
+    let kittensToRemove = [];
+    for (let i = row - 1; i <= row + 1; i++) {
+        for (let j = col - 1; j <= col + 1; j++) {
+            if (i < 0 || i > boardSize - 1 || j < 0 || j > boardSize - 1) {
+                continue;
+            }
+            if (i === row && j === col) {
+                continue;
+            }
+            adjacentCells.push(`${i}${j}`);
+            adjacentCellColors.push(document.getElementById(`${i}${j}`).classList[0]);
+        }
+    }
+    for (let i = 0; i < adjacentCells.length; i++) {
+        merged.push([adjacentCells[i], adjacentCellColors[i]]);
+    }
+    for (let i = 0; i < merged.length; i++) {
+        if (merged[i][1] === "black" || merged[i][1] === "yellow") {
+            kittensToRemove.push(merged[i]);
+        } else {
+            continue;
+        }
+    }
+    return kittensToRemove;
+}
+
+function pushKittens(row, col) {
+    let kittensToPush = getKittensToRemove(row, col);
+    for (let i = 0; i < kittensToPush.length; i++) {
+        const newCell = document.getElementById(getNewPosition(kittensToPush[i][0], row, col));
+        if (newCell === null) {
+            const cell = document.getElementById(kittensToPush[i][0]);
+            cell.classList.remove(kittensToPush[i][1]);
+            cell.classList.add("empty-cell");
+            cell.style.backgroundColor = "white";
+            if (kittensToPush[i][1] === "black" && blackBench.childElementCount < kittensPerPlayer) {
+                const black = document.createElement("div");
+                black.classList.add("black");
+                black.style.width = `100px`;
+                black.style.height = `${800 / kittensPerPlayer}px`;
+                black.setAttribute("draggable", "true");
+                blackBench.appendChild(black);
+                blackKittens.push(black);
+            } else if (kittensToPush[i][1] === "yellow" && yellowBench.childElementCount < kittensPerPlayer) {
+                const yellow = document.createElement("div");
+                yellow.classList.add("yellow");
+                yellow.style.width = `100px`;
+                yellow.style.height = `${800 / kittensPerPlayer}px`;
+                yellowBench.appendChild(yellow);
+                yellowKittens.push(yellow);
+                yellow.setAttribute("draggable", "true");
+            }
+
+        } else {
+            if (newCell.classList.contains("black") || newCell.classList.contains("yellow")) {
+                continue;
+            } else if (newCell.classList.contains("empty-cell")) {
+                const cell = document.getElementById(kittensToPush[i][0]);
+                cell.classList.remove(kittensToPush[i][1]);
+                cell.classList.add("empty-cell");
+                newCell.classList.remove("empty-cell");
+                newCell.classList.add(kittensToPush[i][1]);
+                cell.style.backgroundColor = "white";
+                newCell.style.backgroundColor = "white";
+            }
+
+        }
+    }
+
+}
+
+function updateScore() {
+    if (gameOver) { return; }
+
+    function isAligned(c, c1, c2, c3) {
+        if (c1.classList[0] !== "empty-cell" &&
+            c1.classList[0] === c2.classList[0] &&
+            c2.classList[0] === c3.classList[0]) {
+            if (c === "black") {
+                for (let i = 0; i < 3; i++) {
+                    const b = document.createElement("div");
+                    b.classList.add("black");
+                    blackBench.appendChild(b);
+                    blackKittens.push(b);
+
                 }
-                updateTimeOnPlacement();
+            } else if (c === "yellow") {
+                for (let i = 0; i < 3; i++) {
+                    const y = document.createElement("div");
+                    y.classList.add("yellow");
+                    yellowBench.appendChild(y);
+                    yellowKittens.push(y);
+                }
+            }
+            score[c]++;
+            c1.classList.replace(c1.classList[0], "empty-cell");
+            c2.classList.replace(c2.classList[0], "empty-cell");
+            c3.classList.replace(c3.classList[0], "empty-cell");
+        }
+
+    }
+
+    for (let i = 0; i < boardSize; i++) {
+        for (let j = 0; j < boardSize; j++) {
+            if (i < boardSize - 2) {
+                let cell1 = document.getElementById(`${i}${j}`);
+                let cell2 = document.getElementById(`${i + 1}${j}`);
+                let cell3 = document.getElementById(`${i + 2}${j}`);
+                isAligned(cell1.classList[0], cell1, cell2, cell3);
+            }
+            if (j < boardSize - 2) {
+                let cell1 = document.getElementById(`${i}${j}`);
+                let cell2 = document.getElementById(`${i}${j + 1}`);
+                let cell3 = document.getElementById(`${i}${j + 2}`);
+                isAligned(cell1.classList[0], cell1, cell2, cell3);
+            }
+            if (i < boardSize - 2 && j < boardSize - 2) {
+                let cell1 = document.getElementById(`${i}${j}`);
+                let cell2 = document.getElementById(`${i + 1}${j + 1}`);
+                let cell3 = document.getElementById(`${i + 2}${j + 2}`);
+                isAligned(cell1.classList[0], cell1, cell2, cell3);
+            }
+            if (i < boardSize - 2 && j >= 2) {
+                let cell1 = document.getElementById(`${i}${j}`);
+                let cell2 = document.getElementById(`${i + 1}${j - 1}`);
+                let cell3 = document.getElementById(`${i + 2}${j - 2}`);
+                isAligned(cell1.classList[0], cell1, cell2, cell3);
+            }
+        }
+    }
+    blackScore.innerText = score.black;
+    yellowScore.innerText = score.yellow;
+}
+
+
+
+function isGameOver() {
+    if (blackKittens.length === 0 && currPlayer === "black") {
+        prompt.textContent = "Black ran out of kittens, game over! Yellow wins!";
+        restartGameButton.style.display = "block";
+        gameOver = true;
+    } else if (yellowKittens.length === 0 && currPlayer === "yellow") {
+        prompt.textContent = "Yellow ran out of kittens, game over! Black wins!";
+        restartGameButton.style.display = "block";
+        gameOver = true;
+    }
+    if (blackScore.innerText === winningScore) {
+        prompt.innerText = `Black wins!`;
+        restartGameButton.style.display = "block";
+        gameOver = true;
+    } else if (yellowScore.innerText === winningScore) {
+        prompt.innerText = `Yellow wins!`;
+        restartGameButton.style.display = "block";
+        gameOver = true;
+    }
+}
+
+function handleElementClick(event) {
+    if (gameOver) {
+        return;
+    }
+    const c = event.target;
+    const row = parseInt(c.id[0]);
+    const col = parseInt(c.id[1]);
+    let removed = null;
+
+    if (c.classList.contains("black") || c.classList.contains("yellow")) { return; }
+    else if (c.classList.contains("empty-cell")) {
+        if (currPlayer === "black") {
+            c.classList.add("black");
+            currPlayer = "yellow";
+            prompt.textContent = "Yellow's turn";
+            removed = blackKittens.pop();
+        } else {
+            c.classList.add("yellow");
+            currPlayer = "black";
+            prompt.textContent = "Black's turn";
+            removed = yellowKittens.pop();
+        }
+        if (removed !== null) {
+            removed.remove();
+        }
+        c.classList.remove("empty-cell");
+    }
+    pushKittens(row, col);
+    updateScore();
+    isGameOver();
+}
+
+function handleMouseOver(event) {
+    let eventType = event.type;
+    const c = event.target;
+    const row = parseInt(c.id[0]);
+    const col = parseInt(c.id[1]);
+    let kittensToHighlight = getKittensToRemove(row, col);
+    for (let i = 0; i < kittensToHighlight.length; i++) {
+        const newCell = document.getElementById(getNewPosition(kittensToHighlight[i][0], row, col));
+        if (newCell === null) {
+            const cell = document.getElementById(kittensToHighlight[i][0]);
+            if (eventType === "mouseover") {
+                c.style.backgroundColor = "#737a89";
+                cell.style.backgroundColor = "#FBF719 ";
+                newCell.style.backgroundColor = "#5DE23C";
             } else {
-                endGame();
+                c.style.backgroundColor = "white";
+                cell.style.backgroundColor = "white";
+                newCell.style.backgroundColor = "white";
             }
-        }
-    }
-
-    updateTimeOnPlacement();
-
-    if (totalUnits <= 0) {
-        endGame();
-        mainHeader.innerText = `Game Over!`;
-
-    } else {
-        selectedElement = elements[Math.floor(Math.random() * elements.length)];
-        createNextElement();
-    }
-}
-function previewElementOnMap(event) {
-    const cell = event.target;
-    const row = parseInt(cell.dataset.row);
-    const col = parseInt(cell.dataset.col);
-
-    const elementShape = selectedElement.shape;
-    const previewCells = [];
-    let previousCells = [];
-    for (let i = 0; i < elementShape.length; i++) {
-        for (let j = 0; j < elementShape[i].length; j++) {
-            const currentRow = row + i;
-            const currentCol = col + j;
-
-            if (
-                currentRow >= 0 &&
-                currentRow < 11 &&
-                currentCol >= 0 &&
-                currentCol < 11 &&
-                elementShape[i][j] === 1
-            ) {
-                const mapCell = document.querySelector(
-                    `.cell[data-row="${currentRow}"][data-col="${currentCol}"]`
-                );
-
-                const previewCell = document.createElement('div');
-                const hoveredCell = document.createElement('div');
-                previewCell.classList.add('cell-preview');
-
-                if (!mapCell.classList.contains('base')) {
-                    previewCell.classList.add('occupied');
-
+        } else {
+            if (newCell.classList.contains("black") || newCell.classList.contains("yellow")) {
+                continue;
+            } else if (newCell.classList.contains("empty-cell")) {
+                const cell = document.getElementById(kittensToHighlight[i][0]);
+                if (eventType === "mouseover") {
+                    c.style.backgroundColor = "#737a89";
+                    newCell.style.backgroundColor = "#5DE23C";
+                    cell.style.backgroundColor = "#FBF719 ";
                 } else {
-                    previewCell.classList.add(selectedElement.type);
-                }
-
-
-                previewCells.push({ cell: previewCell, row: currentRow, col: currentCol });
-                previousCells.push(previewCell.classList.contains('occupied'));
-                if (mapCell) {
-                    mapCell.appendChild(previewCell);
-                    mapCell.appendChild(hoveredCell);
+                    c.style.backgroundColor = "white";
+                    cell.style.backgroundColor = "white";
+                    newCell.style.backgroundColor = "white";
                 }
             }
         }
+
     }
-    canPlace = !previousCells.includes(true);
-
-    cell.addEventListener('mouseleave', () => {
-        previewCells.forEach(({ cell }) => {
-            cell.remove();
-        });
-    }, { once: true });
-    cell.addEventListener('click', placeElementOnMap);
 }
 
-
-
-function calculatePointsForEdgeOfForest(map) {
-    let points = 0;
-
-    for (let i = 0; i < map.length; i++) {
-        if (map[0][i] === 'forest' || map[map.length - 1][i] === 'forest' || map[i][0] === 'forest' || map[i][map[0].length - 1] === 'forest') {
-            points++;
-        }
-    }
-
-    return points;
-}
-
-function calculatePointsForSleepyValley(map) {
-    let points = 0;
-
-    map.forEach(row => {
-        const forestCount = row.filter(cell => cell === 'forest').length;
-        if (forestCount === 3) {
-            points += 4;
-        }
-    });
-
-    return points;
-}
-
-function calculatePointsForBorderlands(map) {
-    let points = 0;
-
-    map.forEach(row => {
-        if (row.every(cell => cell !== '')) {
-            points += 6;
-        }
-    });
-    for (let i = 0; i < map[0].length; i++) {
-        const column = map.map(row => row[i]);
-        if (column.every(cell => cell !== '')) {
-            points += 6;
-        }
-    }
-
-    return points;
-}
-
-function calculatePointsForWateringPotatoes(map) {
-    let points = 0;
-
-    for (let row = 0; row < map.length; row++) {
-        for (let col = 0; col < map[0].length; col++) {
-            if (map[row][col] === 'water') {
-                if (
-                    (row > 0 && map[row - 1][col] === 'farm') ||
-                    (row < map.length - 1 && map[row + 1][col] === 'farm') ||
-                    (col > 0 && map[row][col - 1] === 'farm') ||
-                    (col < map[0].length - 1 && map[row][col + 1] === 'farm')
-                ) {
-                    points += 2;
-                }
+function handleMouseOut(event) {
+    const c = event.target;
+    const row = parseInt(c.id[0]);
+    const col = parseInt(c.id[1]);
+    let removeHighlight = getKittensToRemove(row, col);
+    for (let i = 0; i < removeHighlight.length; i++) {
+        const newCell = document.getElementById(getNewPosition(removeHighlight[i][0], row, col));
+        if (newCell === null) {
+            const cell = document.getElementById(removeHighlight[i][0]);
+            cell.style.backgroundColor = "";
+            newCell.style.backgroundColor = "";
+        } else {
+            if (newCell.classList.contains("black") || newCell.classList.contains("yellow")) {
+                continue;
+            } else if (newCell.classList.contains("empty-cell")) {
+                const cell = document.getElementById(removeHighlight[i][0]);
+                newCell.style.backgroundColor = "";
+                cell.style.backgroundColor = "";
             }
         }
-    }
 
-    return points;
+    }
 }
 
-function calculatePointsForTreeLine(map) {
-    let maxTreeLineLength = 0;
-    let currentTreeLineLength = 0;
-    let counts = {};
 
-    for (let col = 0; col < map[0].length; col++) {
-        currentTreeLineLength = 0;
-        for (let row = 0; row < map.length; row++) {
-            if (map[row][col] === 'forest') {
-                currentTreeLineLength++;
+
+function dragStart(event) {
+    let pickedUp = this.classList[0];
+    if (this.classList.contains(currPlayer)) {
+        this.classList.add("dragging");
+    }
+}
+function dragEnd(event) {
+    this.classList.remove("dragging");
+}
+function dragEnter(event) {
+    event.preventDefault();
+    let eventType = event.type;
+    const c = event.target;
+    const row = parseInt(c.id[0]);
+    const col = parseInt(c.id[1]);
+    let kittensToHighlight = getKittensToRemove(row, col);
+    for (let i = 0; i < kittensToHighlight.length; i++) {
+        const newCell = document.getElementById(getNewPosition(kittensToHighlight[i][0], row, col));
+        if (newCell === null) {
+            const cell = document.getElementById(kittensToHighlight[i][0]);
+            if (eventType === "mouseover") {
+                c.style.backgroundColor = "#737a89";
+                cell.style.backgroundColor = "#FBF719 ";
+                newCell.style.backgroundColor = "#5DE23C";
             } else {
-                if (currentTreeLineLength > maxTreeLineLength) {
-                    maxTreeLineLength = currentTreeLineLength;
-                }
-                currentTreeLineLength = 0;
+                c.style.backgroundColor = "white";
+                cell.style.backgroundColor = "white";
+                newCell.style.backgroundColor = "white";
             }
-        }
-        if (currentTreeLineLength > maxTreeLineLength) {
-            maxTreeLineLength = currentTreeLineLength;
-        }
-        if (maxTreeLineLength > 0) {
-            counts[maxTreeLineLength] = (counts[maxTreeLineLength] || 0) + 1;
-        }
-    }
-
-    let points = 0;
-    for (let length in counts) {
-        if (counts[length] === 1) {
-            points += 2 * length;
-        }
-    }
-    return points;
-}
-
-function calculatePointsForWealthyTown(map) {
-    let points = 0;
-
-    function countDifferentTerrains(row, col) {
-        const terrains = new Set();
-        if (row > 0 && map[row - 1][col] !== '') {
-            terrains.add(map[row - 1][col]);
-        }
-        if (row < map.length - 1 && map[row + 1][col] !== '') {
-            terrains.add(map[row + 1][col]);
-        }
-        if (col > 0 && map[row][col - 1] !== '') {
-            terrains.add(map[row][col - 1]);
-        }
-        if (col < map[0].length - 1 && map[row][col + 1] !== '') {
-            terrains.add(map[row][col + 1]);
-        }
-        return terrains.size >= 3;
-    }
-
-    for (let row = 0; row < map.length; row++) {
-        for (let col = 0; col < map[0].length; col++) {
-            if (map[row][col] === 'village' && countDifferentTerrains(row, col)) {
-                points += 3;
-            }
-        }
-    }
-    return points;
-}
-
-function calculatePointsForWateringCanal(map) {
-    let points = 0;
-
-    for (let col = 0; col < map[0].length; col++) {
-        let waterCount = 0;
-        let farmCount = 0;
-        let hasWater = false;
-        let hasFarm = false;
-
-        for (let row = 0; row < map.length; row++) {
-            if (map[row][col] === 'water') {
-                waterCount++;
-                hasWater = true;
-            } else if (map[row][col] === 'farm') {
-                farmCount++;
-                hasFarm = true;
-            }
-        }
-
-        if (hasWater && hasFarm && waterCount === farmCount) {
-            points += 4;
-        }
-    }
-
-    return points;
-}
-
-function calculatePointsForMagiciansValley(map) {
-    let points = 0;
-
-    for (let row = 0; row < map.length; row++) {
-        for (let col = 0; col < map[0].length; col++) {
-            if (map[row][col] === 'water') {
-                if (
-                    (row > 0 && map[row - 1][col] === 'mountain') ||
-                    (row < map.length - 1 && map[row + 1][col] === 'mountain') ||
-                    (col > 0 && map[row][col - 1] === 'mountain') ||
-                    (col < map[0].length - 1 && map[row][col + 1] === 'mountain')
-                ) {
-                    points += 3;
+        } else {
+            if (newCell.classList.contains("black") || newCell.classList.contains("yellow")) {
+                continue;
+            } else if (newCell.classList.contains("empty-cell")) {
+                const cell = document.getElementById(kittensToHighlight[i][0]);
+                if (eventType === "mouseover") {
+                    c.style.backgroundColor = "#737a89";
+                    newCell.style.backgroundColor = "#5DE23C";
+                    cell.style.backgroundColor = "#FBF719 ";
+                } else {
+                    c.style.backgroundColor = "white";
+                    cell.style.backgroundColor = "white";
+                    newCell.style.backgroundColor = "white";
                 }
             }
         }
+
     }
 
-    return points;
 }
-
-function calculatePointsForEmptySite(map) {
-    let points = 0;
-
-    function isEmptyCell(row, col) {
-        return row >= 0 && row < map.length &&
-            col >= 0 && col < map[0].length &&
-            map[row][col] === '';
-    }
-
-    for (let row = 0; row < map.length; row++) {
-        for (let col = 0; col < map[0].length; col++) {
-            if (map[row][col] === 'village') {
-                if (isEmptyCell(row - 1, col)) points += 2; // Check above
-                if (isEmptyCell(row + 1, col)) points += 2; // Check below
-                if (isEmptyCell(row, col - 1)) points += 2; // Check left
-                if (isEmptyCell(row, col + 1)) points += 2; // Check right
-            }
+function drop(event) {
+    event.preventDefault();
+    if (gameOver) return;
+        if (gameOver) {
+            return;
         }
-    }
-    return points;
-}
-
-function calculatePointsForTerracedHouse(map) {
-    let maxContiguousVillageLength = 0;
-    let currentContiguousVillageLength = 0;
-
-    for (let row = 0; row < map.length; row++) {
-        currentContiguousVillageLength = 0;
-        for (let col = 0; col < map[0].length; col++) {
-            if (map[row][col] === 'village') {
-                currentContiguousVillageLength++;
+        const c = event.target;
+        const row = parseInt(c.id[0]);
+        const col = parseInt(c.id[1]);
+        let removed = null;
+    
+        if (c.classList.contains("black") || c.classList.contains("yellow")) { return; }
+        else if (c.classList.contains("empty-cell")) {
+            if (currPlayer === "black") {
+                c.classList.add("black");
+                currPlayer = "yellow";
+                prompt.textContent = "Yellow's turn";
+                removed = blackKittens.pop();
             } else {
-                if (currentContiguousVillageLength > maxContiguousVillageLength) {
-                    maxContiguousVillageLength = currentContiguousVillageLength;
-                }
-                currentContiguousVillageLength = 0;
+                c.classList.add("yellow");
+                currPlayer = "black";
+                prompt.textContent = "Black's turn";
+                removed = yellowKittens.pop();
             }
-        }
-        if (currentContiguousVillageLength > maxContiguousVillageLength) {
-            maxContiguousVillageLength = currentContiguousVillageLength;
-        }
-    }
-
-    return 2 * maxContiguousVillageLength;
-}
-
-function calculatePointsForOddNumberedSilos(map) {
-    let points = 0;
-
-    for (let col = 0; col < map[0].length; col++) {
-        if (col % 2 !== 0) {
-            let isFullColumn = true;
-            for (let row = 0; row < map.length; row++) {
-                if (map[row][col] === '') {
-                    isFullColumn = false;
-                    break;
-                }
+            if (removed !== null) {
+                removed.remove();
             }
-            if (isFullColumn) {
-                points += 10;
-            }
+            c.classList.remove("empty-cell");
         }
+        pushKittens(row, col);
+        updateScore();
+        isGameOver();
+    
+}
+
+
+
+startGameButton.addEventListener("click", function (event) {
+    event.preventDefault();
+    if (player1.value === "" || player2.value === "" || pointsToWin.value === "" || boardDimensions.value === "" || numberOfKittens.value === "") {
+        alert("Please fill in all fields before starting the game.");
+        return;
     }
-
-    return points;
-}
-
-function calculatePointsForRichCountryside(map) {
-    let points = 0;
-
-    for (let row = 0; row < map.length; row++) {
-        const terrainTypes = new Set();
-        for (let col = 0; col < map[0].length; col++) {
-            terrainTypes.add(map[row][col]);
-        }
-        if (terrainTypes.size >= 5) {
-            points += 4;
-        }
-    }
-
-    return points;
-}
-
-function calculatePointsForMission(map, mission) {
-    let points = 0;
-
-    switch (mission.title) {
-        case 'Edge of the forest':
-            points = calculatePointsForEdgeOfForest(map);
-            break;
-        case 'Sleepy valley':
-            points = calculatePointsForSleepyValley(map);
-            break;
-        case 'Borderlands':
-            points = calculatePointsForBorderlands(map);
-            break;
-        case 'Watering potatoes':
-            points = calculatePointsForWateringPotatoes(map);
-            break;
-        case 'Tree line':
-            points = calculatePointsForTreeLine(map);
-            break;
-        case 'Watering canal':
-            points = calculatePointsForWateringCanal(map);
-            break;
-        case 'Wealthy town':
-            points = calculatePointsForWealthyTown(map);
-            break;
-        case `Magicians' valley`:
-            points = calculatePointsForMagiciansValley(map);
-            break;
-        case 'Empty site':
-            points = calculatePointsForEmptySite(map);
-            break;
-        case 'Terraced house':
-            points = calculatePointsForTerracedHouse(map);
-            break;
-        case 'Odd numbered silos':
-            points = calculatePointsForOddNumberedSilos(map);
-            break;
-        case 'Rich country side':
-            points = calculatePointsForRichCountryside(map);
-            break;
-    }
-
-    return points;
-}
-
-function calculatePointsForAllMissions(map, missions) {
-    let totalPoints = 0;
-
-    missions.forEach(mission => {
-        const missionPoints = calculatePointsForMission(map, mission);
-        totalPoints += missionPoints;
-        missionInfoContainer.innerHTML += `Points for ${mission.title}: ${missionPoints} <br>`;
-    });
-
-    return totalPoints;
-}
-function endGame() {
-    const totalPointsA = calculatePointsForAllMissions(map, missionsA);
-    const totalPointsB = calculatePointsForAllMissions(map, missionsB);
-    const totalPointsC = calculatePointsForAllMissions(map, missionsC);
-    const totalPointsD = calculatePointsForAllMissions(map, missionsD);
-    missionInfoContainer.innerHTML = '';
-    displayMissionInfo(missionsA, 'A', totalPointsA);
-    displayMissionInfo(missionsB, 'B', totalPointsB);
-    displayMissionInfo(missionsC, 'C', totalPointsC);
-    displayMissionInfo(missionsD, 'D', totalPointsD);
-
-    const borderlandsScore = calculatePointsForBorderlands(map);
-    missionInfoContainer.innerHTML += `Points for mission Borderlands: ${borderlandsScore} <br>`;
-    totalPoints.innerText = `Total Points: ${totalPointsA + totalPointsB + totalPointsC + totalPointsD}`;
-    mainHeader.innerText = `Game Over!`;
-}
-function createNextElement() {
-    const elementDiv = document.createElement('div');
-    elementDiv.classList.add('element-div');
-
-    for (let row = 0; row < 3; row++) {
-        for (let col = 0; col < 3; col++) {
-            const cell = createCellElement(row, col);
-
-
-            if (selectedElement.shape[row][col] === 1) {
-                cell.classList.add(selectedElement.type);
-            } else {
-                cell.classList.add('base');
-            }
-            elementDiv.appendChild(cell);
-        }
-    }
-
-    nextElementContainer.innerHTML = '';
-    nextElementContainer.appendChild(elementDiv);
-
-    timeUnit.textContent = `Time Unit: ${selectedElement.time}`;
-}
-
-function createCellElement(row, col) {
-    const cell = document.createElement('div');
-    cell.classList.add('cell');
-    cell.classList.add('base');
-    cell.dataset.row = row;
-    cell.dataset.col = col;
-    return cell;
-}
-
-function updateTimeOnPlacement() {
-    totalUnits -= selectedElement.time;
-    remainingUnitsTotal.textContent = `Remaining Units in Total: ${totalUnits}`;
-}
-
-function shuffle(array) {
-    return array.sort(() => Math.random() - 0.5);
-}
-
-function rotateMatrix(matrix) {
-    const rows = matrix.length;
-    const cols = matrix[0].length;
-    const rotatedMatrix = Array.from({ length: cols }, () => Array(rows).fill(0));
-
-    for (let row = 0; row < rows; row++) {
-        for (let col = 0; col < cols; col++) {
-            rotatedMatrix[col][rows - 1 - row] = matrix[row][col];
-        }
-    }
-
-    return rotatedMatrix;
-}
-
-function flipMatrix(matrix) {
-    return matrix.map(row => row.slice().reverse());
-}
-
-function rotateElement() {
-    selectedElement.shape = rotateMatrix(selectedElement.shape);
-    createNextElement();
-}
-
-function flipElement() {
-    selectedElement.shape = flipMatrix(selectedElement.shape);
-    createNextElement();
-}
-
-
-
-
-
-renderMap();
-createNextElement();
-const mapCells = document.querySelectorAll('.cell');
-
-mapCells.forEach(cell => {
-    cell.addEventListener('mouseover', previewElementOnMap, { once: true });
-    cell.addEventListener('mouseleave', () => {
-        cell.addEventListener('mouseover', previewElementOnMap, { once: true });
-    });
-    cell.addEventListener('click', placeElementOnMap);
-
+    createGame(player1.value, player2.value, pointsToWin.value, boardDimensions.value, numberOfKittens.value);
 });
-rotateButton.addEventListener('click', rotateElement);
-flipButton.addEventListener('click', flipElement);
+restartGameButton.addEventListener("click", function (event) {
+    event.preventDefault();
+    blackKittens = [];
+    yellowKittens = [];
+    blackBench.innerHTML = "";
+    yellowBench.innerHTML = "";
+    currPlayer = "black";
+    score = {
+        black: 0,
+        yellow: 0
+    };
+    gameOver = false;
+    table.innerHTML = "";
+    blackScore.innerText = "0";
+    yellowScore.innerText = "0";
+    prompt.innerText = "Black kittens start the game!";
+    createGame(player1.value, player2.value, pointsToWin.value, boardDimensions.value, numberOfKittens.value);
+}
+);
+
+delegate(table, "click", "td", handleElementClick);
+delegate(table, "mouseover", "td", handleMouseOver);
+delegate(table, "mouseout", "td", handleMouseOver);
+delegate(blackBench, "dragstart", "img", dragStart);
+delegate(blackBench, "dragend", "img", dragEnd);
+delegate(blackBench, "dragenter", "td", dragEnter);
+delegate(blackBench, "drop", "td", drop);
+delegate(yellowBench, "dragstart", "img", dragStart);
+delegate(yellowBench, "dragend", "img", dragEnd);
+delegate(yellowBench, "dragenter", "td", dragEnter);
+delegate(yellowBench, "drop", "td", drop);
